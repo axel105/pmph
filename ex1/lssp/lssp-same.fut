@@ -1,12 +1,14 @@
 -- Parallel Longest Satisfying Segment
 --
 -- ==
--- compiled input {
---    [1, -2, -2, 0, 0, 0, 0, 0, 3, 4, -6, 1]
--- }
--- output {
---    5
--- }
+-- compiled input { [1, -2, -2, 0, 0, 0, 0, 0, 3, 4, -6, 1] }
+-- output { 5 }
+-- compiled input { [1, 8, 8, 9, 8, 8, 10, 8, 8] }
+-- output { 2 }
+-- compiled input { [1, 2, 3, 4, 3, 2, 1] }
+-- output { 0 }
+-- compiled input { [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+-- output { 10 }
 
 import "lssp"
 import "lssp-seq"
