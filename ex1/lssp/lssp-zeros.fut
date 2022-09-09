@@ -1,12 +1,12 @@
 -- Parallel Longest Satisfying Segment
 --
 -- ==
--- compiled input {
---    [1i32, -2, -2, 0, 0, 0, 0, 0, 3, 4, -6, 1]
--- }
--- output {
---    5
--- }
+compiled input {
+    [1i32, -2, -2, 0, 0, 0, 0, 0, 3, 4, -6, 1]
+}
+output {
+    5
+}
 
 import "lssp-seq"
 import "lssp"
