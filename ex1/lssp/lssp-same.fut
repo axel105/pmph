@@ -6,7 +6,7 @@
 -- compiled input { [1, 8, 8, 9, 8, 8, 10, 8, 8] }
 -- output { 2 }
 -- compiled input { [1, 2, 3, 4, 3, 2, 1] }
--- output { 0 }
+-- output { 1 }
 -- compiled input { [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
 -- output { 10 }
 
