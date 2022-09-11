@@ -9,6 +9,11 @@
 -- output { 1 }
 -- compiled input { [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
 -- output { 10 }
+-- compiled input { [1, 1] }
+-- output { 2 }
+-- compiled input { [1, 1, 1] }
+-- output { 3 }
+
 
 import "lssp"
 import "lssp-seq"
