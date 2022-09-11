@@ -7,8 +7,13 @@
 -- output { 8 }
 -- compiled input { [10, 9, 8, 7, 6, 5, 4, 3, 2] }  
 -- output { 1 }
--- compiled input { [1] }  
+-- compiled input { [1] } 
 -- output { 1 }
+-- compiled input { [1, 1] }
+-- output { 2 }
+-- compiled input { [1, 1, 1] }
+-- output { 3 }
+
 
 import "lssp"
 import "lssp-seq"

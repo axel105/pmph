@@ -13,6 +13,10 @@
 -- output { 2 }
 -- compiled input { [1, 1, 1] }
 -- output { 3 }
+-- compiled input { [1, 1, 1, 1] }
+-- output { 4 }
+-- compiled input { [1, 1, 1, 1, 1] }
+-- output { 5 }
 
 
 import "lssp"
