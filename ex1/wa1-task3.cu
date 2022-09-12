@@ -40,9 +40,9 @@ int main(int argc, char** argv) {
     funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N);
 
     // copy result from device to host
-    cudaMemcpy(cpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
+    cudaMemcpy(gpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
 
-    printf("exectued something");
+    printf("exectued something:   %.6f\n", gpu_res[3342]);
     
     // clean-up memory
     free(h_in);       
