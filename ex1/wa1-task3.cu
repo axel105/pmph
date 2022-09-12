@@ -39,8 +39,8 @@ int main(int argc, char** argv) {
     // execute the kernel
     funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N);
 
-    // copy result from ddevice to host
-    cudaMemcpy(h_out, d_out, mem_size, cudaMemcpyDeviceToHost);
+    // copy result from device to host
+    cudaMemcpy(cpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
 
     printf("exectued something");
     
