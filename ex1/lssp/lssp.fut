@@ -18,7 +18,7 @@ let redOp (pred2 : int -> int -> bool)
   let (lssx, lisx, lcsx, tlx, firstx, lastx) = x
   let (lssy, lisy, lcsy, tly, firsty, lasty) = y
 
-  let connect = if (tlx != 0) && (tly != 0) then pred2 lastx firsty else false
+  let connect = if (tlx != 0) && (tly != 0) then pred2 lastx firsty else true
   let newlss = if (connect) then max(max(lssx, lssy), lcsx+lisy) else max(lssx, lssy) -- if connected take max of longest x, longest y and sum of concluding x and initial y, else max longest x and longest y
   let newlis = if (lisx == tlx) && (connect) then tlx + lisy else lisx -- if connected and inital x equals total x then total x plus initial y, else initial x
   let newlcs = if (lcsy == tly) && (connect) then tly + lcsx else lcsy -- if connected and concluding y length equals total y then total y plus concluding x, else concluding y
