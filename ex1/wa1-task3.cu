@@ -42,7 +42,25 @@ int main(int argc, char** argv) {
     // copy result from device to host
     cudaMemcpy(gpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
 
-    printf("exectued something:   %.6f\n", gpu_res[3342]);
+    // compute on cpu
+    for (int i = 1; i <= N; ++i) {
+        cpu_res[gid] = pow((i/(i-2.3)), 3); // do computation
+    }
+
+    // check validty of results
+    bool valid = true;
+    for (int i = 1; i <= N; ++i) {
+        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.0001)) {
+            valid = false;
+            printf("CPU res: %.10f, GPU res: %.10f\n");
+        }
+    }
+
+    if (valid) {
+        printf("VALID");
+    } else {
+        printf("INVALID");
+    }
     
     // clean-up memory
     free(h_in);       
