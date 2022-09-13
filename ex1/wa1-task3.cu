@@ -46,34 +46,61 @@ int main(int argc, char** argv) {
     // copy host memory to device
     cudaMemcpy(d_in, h_in, mem_size, cudaMemcpyHostToDevice);
 
+    ////////// PARALLEL EXEC ////////////////
     // execute the kernel and measure time
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
+    // most websites suggest measuring runtime with cuda events, however we saw the 
+    // example with the gettimeofday() function during exercises, so I went with the later!
+    unsigned long int elapsed; 
+    struct timeval t_start, t_end, t_diff;
+    gettimeofday(&t_start, NULL);
 
-    cudaEventRecord(start);
+    // cudaEventRecord(startGPU, stream);
     
-    funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N); 
+    for (int i = 0; i < GPU_RUNS; i++) {
+        funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N); // execute kernel
+    } cudaThreadSynchronize(); // wait for every thread to finish
 
-    cudaEventRecord(stop);        // mark end of kernel execution
-    cudaEventSynchronize(stop);
+    //cudaEventRecord(stopGPU, stream);        // mark end of kernel execution
+    //cudaEventSynchronize(stopGPU);
 
-    float milliseconds = 0;
-    cudaEventElapsedTime(&milliseconds, start, stop);
-    printf("Took %fms in GPUa\n", milliseconds);
+    gettimeofday(&t_end, NULL);
+    timeval_subtract(&t_diff, &t_end, &t_start);
+    elapsed = (t_diff.tv_sec*1e6+t_diff.tv_usec) / GPU_RUNS;
+    printf("GPU execution took %fms)\n",elapsed/1000.0);
+
+    /////////////////////////////////////////
 
     // copy result from device to host
     cudaMemcpy(gpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
 
-    // compute on cpu
-    for (int i = 1; i <= N; ++i) {
-        cpu_res[i-1] = pow((i/(i-2.3)), 3); // do computation
+    ////////// SEQUENTIAL EXEC //////////////
+
+    unsigned long int elapsed_seq; 
+    struct timeval t_start_seq, t_end_seq, t_diff_seq;
+    gettimeofday(&t_start_seq, NULL);
+
+    // cudaEventRecord(startGPU, stream);
+
+    for (int i = 0; i < GPU_RUNS; i++) {
+        // compute on cpu
+        for (int i = 1; i <= N; ++i) {
+            cpu_res[i-1] = pow((i/(i-2.3)), 3); // do computation
+        }
     }
+    //cudaEventRecord(stopGPU, stream); // mark end of kernel execution
+    //cudaEventSynchronize(stopGPU);
+
+    gettimeofday(&t_end_seq, NULL);
+    timeval_subtract(&t_diff_seq, &t_end_seq, &t_start_seq);
+    elapsed_seq = (t_diff.tv_sec*1e6+t_diff.tv_usec) / GPU_RUNS;
+    printf("CPU execution took %fms)\n",elapsed_seq/1000.0);
+
+    /////////////////////////////////////////
 
     // check validty of results
     bool valid = true;
     for (int i = 0; i < N; ++i) {
-        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.000000001)) {
+        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.00000000001)) { // threshold is beyond floating point precision, so choosing a smaller one would not make a big difference!
             valid = false;
             printf("CPU res: %f, GPU res: %f\n", cpu_res[i], gpu_res[i]);
         }
