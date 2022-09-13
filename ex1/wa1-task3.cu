@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     float* gpu_res = (float*) malloc(mem_size);
     // initialize the memory
     for(unsigned int i=1; i<=N; ++i){ 
-        h_in[i] = (float) i+1;
+        h_in[i-1] = (float) i;
     }
 
     // allocate device memory
@@ -44,12 +44,12 @@ int main(int argc, char** argv) {
 
     // compute on cpu
     for (int i = 1; i <= N; ++i) {
-        cpu_res[gid] = pow((i/(i-2.3)), 3); // do computation
+        cpu_res[i-1] = pow((i/(i-2.3)), 3); // do computation
     }
 
     // check validty of results
     bool valid = true;
-    for (int i = 1; i <= N; ++i) {
+    for (int i = 0; i < N; ++i) {
         if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.0001)) {
             valid = false;
             printf("CPU res: %.10f, GPU res: %.10f\n");
