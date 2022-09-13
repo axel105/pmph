@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < N; ++i) {
         if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.0001)) {
             valid = false;
-            printf("CPU res: %.10f, GPU res: %.10f\n");
+            printf("CPU res: %.10f, GPU res: %.10f\n", cpu_res[i], gpu_res[i]);
         }
     }
 
