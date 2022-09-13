@@ -50,16 +50,16 @@ int main(int argc, char** argv) {
     // check validty of results
     bool valid = true;
     for (int i = 0; i < N; ++i) {
-        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.0001)) {
+        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.000001)) {
             valid = false;
             printf("CPU res: %.10f, GPU res: %.10f\n", cpu_res[i], gpu_res[i]);
         }
     }
 
     if (valid) {
-        printf("VALID");
+        printf("VALID\n");
     } else {
-        printf("INVALID");
+        printf("INVALID\n");
     }
     
     // clean-up memory
