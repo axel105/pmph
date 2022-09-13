@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 
     gettimeofday(&t_end_seq, NULL);
     timeval_subtract(&t_diff_seq, &t_end_seq, &t_start_seq);
-    elapsed_seq = (t_diff_seq.tv_sec*1e6+t_diff.tv_usec) / GPU_RUNS;
+    elapsed_seq = (t_diff_seq.tv_sec*1e6+t_diff_seq.tv_usec) / GPU_RUNS;
     printf("CPU execution took %fms)\n",elapsed_seq/1000.0);
 
     /////////////////////////////////////////
