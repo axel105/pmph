@@ -47,18 +47,20 @@ int main(int argc, char** argv) {
     cudaMemcpy(d_in, h_in, mem_size, cudaMemcpyHostToDevice);
 
     // execute the kernel and measure time
-    unsigned long int elapsed; 
-    struct timeval t_start, t_end, t_diff;
-    gettimeofday(&t_start, NULL);
-    
-    for (int i = 0; i < GPU_RUNS; i++) {
-        funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N); // execute kernel
-    } cudaThreadSynchronize(); // wait for every thread to finish
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
 
-    gettimeofday(&t_end, NULL);
-    timeval_subtract(&t_diff, &t_end, &t_start);
-    elapsed = (t_diff.tv_sec*1e6+t_diff.tv_usec) / GPU_RUNS;
-    printf("Took %d microseconds (%.2fms)\n",elapsed,elapsed/1000.0);
+    cudaEventRecord(start);
+    
+    funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N); 
+
+    cudaEventRecord(stop);        // mark end of kernel execution
+    cudaEventSynchronize(stop);
+
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    printf("Took %fms in GPUa\n", milliseconds);
 
     // copy result from device to host
     cudaMemcpy(gpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
