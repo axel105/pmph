@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 #include <cuda_runtime.h>
+#include <sys/time.h>
+#include <time.h>
 
 __global__ void funcKernel(float* d_in, float *d_out, int N) {
     const unsigned int lid = threadIdx.x; // local id inside a block 
@@ -12,6 +14,13 @@ __global__ void funcKernel(float* d_in, float *d_out, int N) {
     }
 }
 
+int timeval_subtract(struct timeval* result, struct timeval* t2,struct timeval* t1) { 
+    unsigned int resolution=1000000;
+    long int diff = (t2->tv_usec + resolution * t2->tv_sec) - (t1->tv_usec + resolution * t1->tv_sec) ;
+    result->tv_sec = diff / resolution;   result->tv_usec = diff % resolution;
+    return (diff<0);
+
+#define GPU_RUNS 100
 int main(int argc, char** argv) {
     unsigned int N = 753411;
     unsigned int mem_size = N*sizeof(float);
@@ -36,8 +45,19 @@ int main(int argc, char** argv) {
     // copy host memory to device
     cudaMemcpy(d_in, h_in, mem_size, cudaMemcpyHostToDevice);
 
-    // execute the kernel
-    funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N);
+    // execute the kernel and measure time
+    unsigned long int elapsed; 
+    struct timeval t_start, t_end, t_diff;
+    gettimeofday(&t_start, NULL);
+    
+    for (int i = 0; i < GPU_RUNS; i++) {
+        funcKernel<<< num_blocks, block_size>>>(d_in, d_out, N); // execute kernel
+    } cudaThreadSynchronize(); // wait for every thread to finish
+
+    gettimeofday(&t_end, NULL);
+    timeval_subtract(&t_diff, &t_end, &t_start);
+    elapsed = (t_diff.tv_sec*1e6+t_diff.tv_usec) / GPU_RUNS;
+    printf("Took %d microseconds (%.2fms)\n",elapsed,elapsed/1000.0);
 
     // copy result from device to host
     cudaMemcpy(gpu_res, d_out, mem_size, cudaMemcpyDeviceToHost);
@@ -50,7 +70,6 @@ int main(int argc, char** argv) {
     // check validty of results
     bool valid = true;
     for (int i = 0; i < N; ++i) {
-        printf("%f\n", fabs(cpu_res[i] - gpu_res[i]));
         if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.000000001)) {
             valid = false;
             printf("CPU res: %f, GPU res: %f\n", cpu_res[i], gpu_res[i]);
