@@ -23,7 +23,7 @@ int timeval_subtract(struct timeval* result, struct timeval* t2,struct timeval* 
 
 #define GPU_RUNS 100
 int main(int argc, char** argv) {
-    unsigned int N = 2048;
+    unsigned int N = 1024;
     unsigned int mem_size = N*sizeof(float);
     unsigned int block_size  = 1024;
     unsigned int num_blocks  = ((N + (block_size - 1)) / block_size);
