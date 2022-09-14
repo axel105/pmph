@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
     // check validty of results
     bool valid = true;
     for (int i = 0; i < N; ++i) {
-        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.00000000001)) { // threshold is beyond floating point precision, so choosing a smaller one would not make a big difference!
+        if (!(fabs(cpu_res[i] - gpu_res[i]) < 0.0000000000000000001)) { // threshold is beyond floating point precision, so choosing a smaller one would not make a big difference!
             valid = false;
             printf("CPU res: %f, GPU res: %f\n", cpu_res[i], gpu_res[i]);
         }
