@@ -102,7 +102,8 @@ let spMatVctMult [num_elms] [vct_len] [num_rows]
   let shp_sc[num_rows-1] = 0
   let flag_arr = scatter (replicate num_elms false) (rotate (-1) shp_sc) (replicate num_rows true)
   let midRes = map (\(i,x) -> x*vct[i]) mat_val
-  in sgmSumF32 flag_arr midRes
+  let resArr = sgmSumF32 flag_arr midRes
+  in replicate num_rows 0.0f32
   
 -- One may run with for example:
 -- $ futhark dataset --i64-bounds=0:9999 -g [1000000]i64 --f32-bounds=-7.0:7.0 -g [1000000]f32 --i64-bounds=100:100 -g [10000]i64 --f32-bounds=-10.0:10.0 -g [10000]f32 | ./spMVmult-seq -t /dev/stderr > /dev/null
