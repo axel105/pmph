@@ -99,8 +99,8 @@ let spMatVctMult [num_elms] [vct_len] [num_rows]
                  (vct : [vct_len]f32) : [num_rows]f32 =
 
   let shp_sc   = scan (+) 0 mat_shp
-  let shp_sc[num_rows-1] = -1
-  let flag_arr = scatter (replicate num_elms false) ([0] ++ shp_sc) (replicate (num_rows + 1) true)
+  let arr = [0] ++ init(shp_sc)
+  let flag_arr = scatter (replicate num_elms false) arr (replicate num_rows true)
   let midRes = map (\(i,x) -> x*vct[i]) mat_val
   in sgmSumF32 flag_arr midRes
   
