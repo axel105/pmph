@@ -67,7 +67,6 @@ let primesFlat (n : i64) : []i64 =
       
       let not_primes = replicate flat_size 0
 
-      let mm1s = map (\p -> (len/p) - 1) sq_primes
       let nn = length sq_primes
       let flag = map (\i -> if i == 0 then false else true) 
                      ((mkFlagArray mult_lens 0 sq_primes) :> [flat_size]i64)
@@ -76,7 +75,7 @@ let primesFlat (n : i64) : []i64 =
       let arr = map (+2) iots
       --let flag_mm1 = mkFlagArray mm1s 0 mm1s
       --let flag_sqrn = mkFlagArray mm1s 0 sq_primes
-      let tmp = mkFlagArrayTuple mm1s (0,0) (zip mult_lens sq_primes) :> [flat_size](i64,i64)
+      let tmp = mkFlagArrayTuple mult_lens (0,0) (zip mult_lens sq_primes) :> [flat_size](i64,i64)
       let (flag_mm1, flag_sqrn) = unzip tmp
       let ps = sgmSumI64 (map (\i -> if i == 0 then false else true) flag_mm1) flag_sqrn
       let composite = map2 (*) ps arr
