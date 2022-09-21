@@ -57,7 +57,7 @@ let primesFlat (n : i64) : []i64 =
       
       let not_primes = replicate flat_size 0
 
-      let mm1s = map (\p -> (len/p) - 1) sqrn primes
+      let mm1s = map (\p -> (len/p) - 1) sqrn_primes
       let nn = length sqrn_primes
       let flag = map (\i -> if i == 0 then false else true) (mkFlagArray sqrn_primes 0 sqrn_primes)
       let vals = map2 (\f -> if f then 0 else 1) flag
