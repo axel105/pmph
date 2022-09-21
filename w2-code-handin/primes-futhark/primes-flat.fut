@@ -79,7 +79,7 @@ let primesFlat (n : i64) : []i64 =
       let (flag_mm1, flag_sqrn) = unzip tmp
       let ps = sgmSumI64 (map (\i -> if i == 0 then false else true) flag_mm1) flag_sqrn
       let composite = map2 (*) ps arr
-      let not_primes = reduce (++) [] composite
+      let not_primes = composite
 
 
 
