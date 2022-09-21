@@ -3,6 +3,27 @@
 -- compiled input { 30i64 } output { [2i64, 3i64, 5i64, 7i64, 11i64, 13i64, 17i64, 19i64, 23i64, 29i64] }
 -- compiled input { 10000000i64 } auto output
 
+-- segmented scan with (+) on floats:
+let sgmSumF32 [n] (flg : [n]bool) (arr : [n]f32) : [n]f32 =
+  let flgs_vals = 
+    scan ( \ (f1, x1) (f2,x2) -> 
+            let f = f1 || f2 in
+            if f2 then (f, x2)
+            else (f, x1 + x2) )
+         (false, 0.0f32) (zip flg arr)
+  let (_, vals) = unzip flgs_vals
+  in vals
+
+-- returns the flag array 
+let mkFlagArray 't [m] (aoa_shp: [m]i32) (zero: t) --aoa_shp=[0,3,1,0,4,2,0] 
+                       (aoa_val: [m]t ) : []i32 = --aoa_val=[1,1,1,1,1,1,1]
+  let shp_rot = map (\i -> if i == 0 then 0 else aoa_shp[i-1]) (iota m)
+  let shp_scn = scan (+) 0 shp_rot --shp_scn=[0,0,3,4,4,8,10]
+  let aoa_len = shp_scn[m-1] + aoa_shp[m-1]--aoa_len= 10
+  let shp_ind = map2 (\shp ind -> if shp==0 then -1 else ind) aoa_shp shp_scn
+  in scatter (replicate aoa_len zero) shp_ind aoa_val
+
+
 let primesFlat (n : i64) : []i64 =
   let sq_primes   = [2i64, 3i64, 5i64, 7i64]
   let len  = 8i64
@@ -35,6 +56,7 @@ let primesFlat (n : i64) : []i64 =
       --  and the shape of `composite` is `mult_lens`. 
       
       let not_primes = replicate flat_size 0
+
 
       -- If not_primes is correctly computed, then the remaining
       -- code is correct and will do the job of computing the prime
