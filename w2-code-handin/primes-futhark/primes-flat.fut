@@ -24,6 +24,15 @@ let mkFlagArray 't [m] (aoa_shp: [m]i64) (zero: i64) --aoa_shp=[0,3,1,0,4,2,0]
   in scatter (replicate aoa_len zero) shp_ind aoa_val
 
 
+let mkFlagArrayTuple 't [m] (aoa_shp: [m]i64) (zero: (i64,i64)) --aoa_shp=[0,3,1,0,4,2,0] 
+                       (aoa_val: [m](i64,i64) ) : [](i64,i64) = --aoa_val=[1,1,1,1,1,1,1]
+  let shp_rot = map (\i -> if i == 0 then 0 else aoa_shp[i-1]) (iota m)
+  let shp_scn = scan (+) 0 shp_rot --shp_scn=[0,0,3,4,4,8,10]
+  let aoa_len = shp_scn[m-1] + aoa_shp[m-1]--aoa_len= 10
+  let shp_ind = map2 (\shp ind -> if shp==0 then -1 else ind) aoa_shp shp_scn
+  in scatter (replicate aoa_len zero) shp_ind aoa_val
+
+
 let primesFlat (n : i64) : []i64 =
   let sq_primes   = [2i64, 3i64, 5i64, 7i64]
   let len  = 8i64
@@ -63,8 +72,9 @@ let primesFlat (n : i64) : []i64 =
       let vals = map (\f -> if f then 0 else 1) flag
       let iots = sgmSumI64 flag vals
       let arr = map (+2) iots
-      let flag_mm1 = mkFlagArray mm1s 0 mm1s
-      let flag_sqrn = mkFlagArray mm1s 0 sq_primes
+      --let flag_mm1 = mkFlagArray mm1s 0 mm1s
+      --let flag_sqrn = mkFlagArray mm1s 0 sq_primes
+      let (flag_mm1, flag_sqrn) = unzip <| mkFlagArrayTuple mm1s (0,0) <| zip mm1s sq_primes
       let ps = sgmSumI64 (map (\i -> if i == 0 then false else true) flag_mm1) flag_sqrn
       let composite = map2 (*) ps arr
       let not_primes = reduce (++) [] composite
