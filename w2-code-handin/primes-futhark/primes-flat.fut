@@ -15,7 +15,7 @@ let sgmSumF32 [n] (flg : [n]bool) (arr : [n]f32) : [n]f32 =
   in vals
 
 -- returns the flag array 
-let mkFlagArray 't [m] (aoa_shp: [m]i64) (zero: t) --aoa_shp=[0,3,1,0,4,2,0] 
+let mkFlagArray 't [m] (aoa_shp: [m]i64) (zero: i64) --aoa_shp=[0,3,1,0,4,2,0] 
                        (aoa_val: [m]t ) : []i64 = --aoa_val=[1,1,1,1,1,1,1]
   let shp_rot = map (\i -> if i == 0 then 0 else aoa_shp[i-1]) (iota m)
   let shp_scn = scan (+) 0 shp_rot --shp_scn=[0,0,3,4,4,8,10]
