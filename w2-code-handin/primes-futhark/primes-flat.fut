@@ -68,7 +68,8 @@ let primesFlat (n : i64) : []i64 =
 
       let mm1s = map (\p -> (len/p) - 1) sq_primes
       let nn = length sq_primes
-      let flag = map (\i -> if i == 0 then false else true) ((mkFlagArray sq_primes 0 sq_primes) :> flat_size)
+      let flag = map (\i -> if i == 0 then false else true) 
+                     ((mkFlagArray sq_primes 0 sq_primes) :> [flat_size]i64)
       let vals = map (\f -> if f then 0 else 1) flag
       let iots = sgmSumI64 flag vals
       let arr = map (+2) iots
