@@ -4,13 +4,13 @@
 -- compiled input { 10000000i64 } auto output
 
 -- segmented scan with (+) on floats:
-let sgmSumF32 [n] (flg : [n]bool) (arr : [n]f32) : [n]f32 =
+let sgmSumI64 [n] (flg : [n]bool) (arr : [n]i64) : [n]i64 =
   let flgs_vals = 
     scan ( \ (f1, x1) (f2,x2) -> 
             let f = f1 || f2 in
             if f2 then (f, x2)
             else (f, x1 + x2) )
-         (false, 0.0f32) (zip flg arr)
+         (false, 0i64) (zip flg arr)
   let (_, vals) = unzip flgs_vals
   in vals
 
@@ -56,6 +56,19 @@ let primesFlat (n : i64) : []i64 =
       --  and the shape of `composite` is `mult_lens`. 
       
       let not_primes = replicate flat_size 0
+
+      let mm1s = map (\p -> (len/p) - 1) sqrn primes
+      let nn = length sqrn_primes
+      let flag = map (\i -> if i == 0 then false else true) (mkFlagArray sqrn_primes 0 sqrn_primes)
+      let vals = map2 (\f -> if f then 0 else 1) flag
+      let iots = sgmSumI64 flag vals
+      let arr = map (+2) iots
+      let flag_mm1 = mkFlagArray mm1s 0 mm1s
+      let flag_sqrn = mkFlagArray mm1s 0 sqrn_primes
+      let ps = sgmSumI64 (map (\i -> if i == 0 then false else true) flag_mm1) flag_sqrn
+      let composite = map2 (*) ps arr
+      let not_primes = reduce (++) [] composite
+
 
 
       -- If not_primes is correctly computed, then the remaining
