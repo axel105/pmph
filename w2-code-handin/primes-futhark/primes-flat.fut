@@ -2,6 +2,7 @@
 -- ==
 -- compiled input { 30i64 } output { [2i64, 3i64, 5i64, 7i64, 11i64, 13i64, 17i64, 19i64, 23i64, 29i64] }
 -- compiled input { 10000000i64 } auto output
+-- compiled input { 100i64 } output { [2i64, 3i64, 5i64, 7i64, 11i64, 13i64, 17i64, 19i64, 23i64, 29i64, 31i64, 37i64, 41i64, 43i64, 47i64, 53i64, 59i64, 61i64, 67i64, 71i64, 73i64, 79i64, 83i64, 89i64, 97i64] }
 
 -- segmented scan with (+) on floats:
 let sgmSumI64 [n] (flg : [n]bool) (arr : [n]i64) : [n]i64 =
