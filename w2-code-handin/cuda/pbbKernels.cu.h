@@ -435,7 +435,7 @@ copyFromGlb2ShrMem( const uint32_t glb_offs
 ) {
     #pragma unroll
     for(uint32_t i=0; i<CHUNK; i++) {
-        uint32_t loc_ind = (threadIdx.x / 32) * CHUNK * 32 + (threadIdx.x%32) + 32 * i; // "warp offset" + element inside warp to access
+        uint32_t loc_ind = (threadIdx.x / 32) * CHUNK * 32 + (threadIdx.x%32) + 32 * i; // "warp offset" + element inside warp to access -- old: threadIdx.x*Chunk + i
         uint32_t glb_ind = glb_offs + loc_ind;
         T elm = ne;
         if(glb_ind < N) { elm = d_inp[glb_ind]; }
