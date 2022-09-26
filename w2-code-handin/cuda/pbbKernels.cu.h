@@ -180,8 +180,8 @@ template<class OP>
 __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
 
+    #pragma unroll
     for (int d = 0; d < 5; ++d) {
-        #pragma unroll
         int h = 1 << d;
         if ((idx % 32) >= h) {
             ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
