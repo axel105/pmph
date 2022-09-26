@@ -180,6 +180,7 @@ template<class OP>
 __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
 
+    /*
     #pragma unroll
     for (int d = 0; d < 5; ++d) {
         int h = 1 << d;
@@ -187,8 +188,7 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
             ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
         }
     }
-    
-    /*
+    */
     const unsigned int lane = idx & (WARP-1);
 
     if(lane==0) {
@@ -197,7 +197,6 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
             ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
         }
     }
-    */
 
     return OP::remVolatile(ptr[idx]);
 }
