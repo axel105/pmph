@@ -178,7 +178,16 @@ class Mssp {
  */ 
 template<class OP>
 __device__ inline typename OP::RedElTp
-scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
+scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {$
+
+    for (int d = 0; d < 5; ++d) {
+        h = 1 << d;
+        if ((idx % 32) >= h) {
+            ptr[idx] = OP::apply(ptr[idx], ptr[idx-h]);
+        }
+    }
+
+    /*
     const unsigned int lane = idx & (WARP-1);
 
     if(lane==0) {
@@ -187,6 +196,8 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
             ptr[idx+i] = OP::apply(ptr[idx+i-1], ptr[idx+i]);
         }
     }
+    */
+
     return OP::remVolatile(ptr[idx]);
 }
 
