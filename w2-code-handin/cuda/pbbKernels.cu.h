@@ -178,7 +178,7 @@ class Mssp {
  */ 
 template<class OP>
 __device__ inline typename OP::RedElTp
-scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {$
+scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
 
     for (int d = 0; d < 5; ++d) {
         h = 1 << d;
