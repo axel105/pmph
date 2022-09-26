@@ -181,12 +181,13 @@ __device__ inline typename OP::RedElTp
 scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
 
     for (int d = 0; d < 5; ++d) {
+        #pragma unroll
         int h = 1 << d;
         if ((idx % 32) >= h) {
             ptr[idx] = OP::apply(ptr[idx], ptr[idx-h]);
         }
     }
-
+    
     /*
     const unsigned int lane = idx & (WARP-1);
 
