@@ -230,7 +230,10 @@ scanIncBlock(volatile typename OP::RedElTp* ptr, const unsigned int idx) {
     //   the first warp. This works because
     //   warp size = 32, and 
     //   max block size = 32^2 = 1024
-    if (lane == (WARP-1)) { ptr[warpid] = OP::remVolatile(ptr[idx]); } 
+    if (lane == (WARP-1) && idx != 1023) { ptr[warpid] = OP::remVolatile(ptr[idx]); } 
+    __syncthreads();
+
+    if (idx == 1023) {ptr[warpid] = OP::remVolatile(ptr[idx]);}
     __syncthreads();
 
     /*
@@ -241,7 +244,7 @@ scanIncBlock(volatile typename OP::RedElTp* ptr, const unsigned int idx) {
 
      // 3. scan again the first warp
     if (warpid == 0) scanIncWarp<OP>(ptr, idx);
-    //__syncthreads();
+    __syncthreads();
 
     // 4. accumulate results from previous step;
     if (warpid > 0) {
