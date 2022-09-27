@@ -188,7 +188,7 @@ scanIncWarp( volatile typename OP::RedElTp* ptr, const unsigned int idx ) {
             ptr[idx] = OP::apply(ptr[idx-h], ptr[idx]);
         }
     }
-    
+
     /*
     const unsigned int lane = idx & (WARP-1);
 
@@ -233,8 +233,14 @@ scanIncBlock(volatile typename OP::RedElTp* ptr, const unsigned int idx) {
     if (lane == (WARP-1)) { ptr[warpid] = OP::remVolatile(ptr[idx]); } 
     __syncthreads();
 
+    /*
     // 3. scan again the first warp
     if (warpid == 0) scanIncWarp<OP>(ptr, idx);
+    __syncthreads();
+    */
+
+     // 3. scan again the first warp
+    if (warpid == 0) scanIncWarp<OP>(ptr, (idx%32));
     __syncthreads();
 
     // 4. accumulate results from previous step;
