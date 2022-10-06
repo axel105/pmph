@@ -82,6 +82,16 @@ origProg(float* A, float* B, unsigned int N) {
  */
 __global__ void 
 transfProg(float* Atr, float* Btr, unsigned int N) {
+    int gid = threadIdx.x + blockIdx.x * blockDim.x;
+    if(gid < N){
+        float accum = 0.0;
+        float tmpA;
+        for (int j = 0; j < 64; j++) {
+            tmpA = Atr[gid + j*64]; // acess formula for transposed flattened matrix
+            accum = sqrt(accum) + tmpA*tmpA;
+            Btr[gid + j*64] = accum;
+        }
+    }
 }
 
 /**
