@@ -87,7 +87,7 @@ transfProg(float* Atr, float* Btr, unsigned int N) {
         float accum = 0.0;
         float tmpA;
         for (int j = 0; j < 64; j++) {
-            tmpA = Atr[gid + j*N]; // acess formula for transposed flattened matrix
+            tmpA = Atr[gid + j*N]; // access formula for transposed flattened matrix
             accum = sqrt(accum) + tmpA*tmpA;
             Btr[gid + j*N] = accum;
         }
