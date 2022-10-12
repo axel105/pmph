@@ -14,9 +14,12 @@ __global__ void
 mkFlags(int mat_rows, int* mat_shp_sc_d, char* flags_d) {
     // ... fill in your implementation here ...
     int id = threadIdx.x + blockIdx.x * blockDim.x;
-    if (id < mat_rows) {
+    
+    if (id < mat_rows-1) {
         flags_d[mat_shp_sc_d[id]] = 1;
     }
+
+    flags_d[0] = 1;
 }
 
 __global__ void 
